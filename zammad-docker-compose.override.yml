@@ -1,0 +1,9 @@
+  zammad-nginx:
+    <<: *zammad-service
+    command:
+    entrypoint: ["echo", "nginx service disabled, repairyourworld uses caddy instead"]
+    restart: no
+    expose:
+    ports:
+    depends_on:
+      - zammad-railsserver

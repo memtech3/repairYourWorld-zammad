@@ -1,0 +1,56 @@
+localhost {
+  root /opt/zammad/public
+  access_log /var/log/caddy/zammad.access.log
+  error_log /var/log/caddy/zammad.error.log
+
+  # Security headers
+  header Security-headers {
+    -Server
+  }
+
+  # Static files
+  file_server {
+    expires max
+    root assets
+    root robots.txt
+    root humans.txt
+    root favicon.ico
+    root apple-touch-icon.png
+  }
+
+  # WebSocket proxy
+  reverse_proxy /ws {
+    to http://127.0.0.1:6042
+    header_up Upgrade {http_upgrade}
+    header_up Connection "Upgrade"
+    header_up CLIENT_IP {remote_addr}
+    header_up X-Forwarded-For {http_x_forwarded_for}
+    header_up X-Forwarded-Proto {scheme}
+    read_timeout 86400s
+  }
+
+  # Action Cable proxy
+  reverse_proxy /cable {
+    to http://127.0.0.1:3000
+    header_up Upgrade {http_upgrade}
+    header_up Connection "Upgrade"
+    header_up CLIENT_IP {remote_addr}
+    header_up X-Forwarded-For {http_x_forwarded_for}
+    header_up X-Forwarded-Proto {scheme}
+    read_timeout 86400s
+  }
+
+  # Main app proxy
+  reverse_proxy {
+    to http://127.0.0.1:3000
+    header_up Host {http_host}
+    header_up CLIENT_IP {remote_addr}
+    header_up X-Forwarded-For {http_x_forwarded_for}
+    header_up X-Forwarded-Proto {scheme}
+    header_up X-Forwarded-User ""
+    read_timeout 300s
+  }
+
+  # Gzip compression
+  encode gzip
+}
