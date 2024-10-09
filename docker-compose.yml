@@ -1,9 +1,6 @@
----
-version: 3.8
-
 include:
   - zammad-docker-compose/docker-compose.yml
-  - zammad-compose.override.yml
+  - docker-compose.override.yml
 services:
   caddy:
     image: caddy:${VERSION:-2.8.4-alpine}
@@ -22,6 +19,12 @@ services:
       - zammad-memcached
       - zammad-postgresql
       - zammad-redis
+      - zammad-railsserver
+  zammad-nginx:
+    profiles:
+      - donotstart
+    ports: []
+    expose: []
 
 volumes:
   caddy_data:

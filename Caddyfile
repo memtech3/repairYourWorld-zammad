@@ -18,35 +18,28 @@ localhost {
     root apple-touch-icon.png
   }
 
-  # WebSocket proxy
+  # Legacy WebSocket proxy
   reverse_proxy /ws {
-    to http://127.0.0.1:6042
+    to http://zammad-websocket
     header_up Upgrade {http_upgrade}
     header_up Connection "Upgrade"
     header_up CLIENT_IP {remote_addr}
-    header_up X-Forwarded-For {http_x_forwarded_for}
-    header_up X-Forwarded-Proto {scheme}
     read_timeout 86400s
   }
 
   # Action Cable proxy
   reverse_proxy /cable {
-    to http://127.0.0.1:3000
+    to http://zammad-railsserver
     header_up Upgrade {http_upgrade}
     header_up Connection "Upgrade"
     header_up CLIENT_IP {remote_addr}
-    header_up X-Forwarded-For {http_x_forwarded_for}
-    header_up X-Forwarded-Proto {scheme}
     read_timeout 86400s
   }
 
   # Main app proxy
   reverse_proxy {
-    to http://127.0.0.1:3000
-    header_up Host {http_host}
+    to http://zammad-railsserver
     header_up CLIENT_IP {remote_addr}
-    header_up X-Forwarded-For {http_x_forwarded_for}
-    header_up X-Forwarded-Proto {scheme}
     header_up X-Forwarded-User ""
     read_timeout 300s
   }
