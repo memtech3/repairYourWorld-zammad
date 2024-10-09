@@ -1,16 +1,8 @@
 localhost {
-  root /opt/zammad/public
-  access_log /var/log/caddy/zammad.access.log
-  error_log /var/log/caddy/zammad.error.log
-
-  # Security headers
-  header Security-headers {
-    -Server
-  }
+  root * /opt/zammad/public
 
   # Static files
   file_server {
-    expires max
     root assets
     root robots.txt
     root humans.txt
@@ -20,28 +12,25 @@ localhost {
 
   # Legacy WebSocket proxy
   reverse_proxy /ws {
-    to http://zammad-websocket
+    to http://zammad-websocket:6042
     header_up Upgrade {http_upgrade}
     header_up Connection "Upgrade"
     header_up CLIENT_IP {remote_addr}
-    read_timeout 86400s
   }
 
   # Action Cable proxy
   reverse_proxy /cable {
-    to http://zammad-railsserver
+    to http://zammad-railsserver:3000
     header_up Upgrade {http_upgrade}
     header_up Connection "Upgrade"
     header_up CLIENT_IP {remote_addr}
-    read_timeout 86400s
   }
 
   # Main app proxy
   reverse_proxy {
-    to http://zammad-railsserver
+    to http://zammad-railsserver:3000
     header_up CLIENT_IP {remote_addr}
     header_up X-Forwarded-User ""
-    read_timeout 300s
   }
 
   # Gzip compression
