@@ -14,17 +14,12 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-      - ${CADDYFILE:-Caddyfile}:/etc/caddy/Caddyfile
+      - ${CADDYFILE:-./Caddyfile}:/etc/caddy/Caddyfile
     depends_on:
       - zammad-memcached
       - zammad-postgresql
       - zammad-redis
       - zammad-railsserver
-  zammad-nginx:
-    profiles:
-      - donotstart
-    ports: []
-    expose: []
 
 volumes:
   caddy_data:

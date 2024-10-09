@@ -1,6 +1,2 @@
 services:
-  zammad-nginx:
-    profiles:
-      - donotstart
-    ports: []
-    expose: []
+  zammad-nginx: !reset []
