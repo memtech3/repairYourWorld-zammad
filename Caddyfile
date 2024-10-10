@@ -1,37 +1,50 @@
 localhost {
-  root * /opt/zammad/public
+ route {
+    # Static files
+    file_server /assets/* {
+      root /opt/zammad/public/
+    }
+    
+    file_server /favicon.ico {
+      root /opt/zammad/public/
+    }
 
-  # Static files
-  file_server {
-    root assets
-    root robots.txt
-    root humans.txt
-    root favicon.ico
-    root apple-touch-icon.png
-  }
+    file_server /humans.txt {
+      root /opt/zammad/public/
+    }
 
-  # Legacy WebSocket proxy
-  reverse_proxy /ws {
-    to http://zammad-websocket:6042
-    header_up Upgrade {http_upgrade}
-    header_up Connection "Upgrade"
-    header_up CLIENT_IP {remote_addr}
-  }
+    file_server /robots.txt {
+      root /opt/zammad/public/
+    }
 
-  # Action Cable proxy
-  reverse_proxy /cable {
-    to http://zammad-railsserver:3000
-    header_up Upgrade {http_upgrade}
-    header_up Connection "Upgrade"
-    header_up CLIENT_IP {remote_addr}
-  }
+    file_server /apple-touch-icon.png {
+      root /opt/zammad/public/
+    }
 
-  # Main app proxy
-  reverse_proxy {
-    to http://zammad-railsserver:3000
-    header_up CLIENT_IP {remote_addr}
-    header_up X-Forwarded-User ""
-  }
+
+    # Legacy WebSocket proxy
+    reverse_proxy /ws/* {
+      to http://zammad-websocket:6042
+      header_up Upgrade {http_upgrade}
+      header_up Connection "Upgrade"
+      header_up CLIENT_IP {remote_addr}
+    }
+  
+    # Action Cable proxy
+    reverse_proxy /cable/* {
+      to http://zammad-railsserver:3000
+      header_up Upgrade {http_upgrade}
+      header_up Connection "Upgrade"
+      header_up CLIENT_IP {remote_addr}
+    }
+  
+    # Main app proxy
+    reverse_proxy * {
+      to http://zammad-railsserver:3000
+      header_up CLIENT_IP {remote_addr}
+      header_up X-Forwarded-User ""
+    }
+ }
 
   # Gzip compression
   encode gzip

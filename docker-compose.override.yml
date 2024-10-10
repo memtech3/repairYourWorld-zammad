@@ -1,2 +1,6 @@
 services:
   zammad-nginx: !reset []
+  zammad-railsserver:
+    volumes:
+      - zammad-static-files:/opt/zammad/public
+      - zammad-storage:/opt/zammad/storage
