@@ -17,6 +17,7 @@ sudo apt-get update
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+sudo cp -r ./ /opt/zammadDocker/
 
 sudo cp ./dockerComposeZammad.service /etc/systemd/system/dockerComposeZammad.service
 sudo systemctl enable dockerComposeZammad
